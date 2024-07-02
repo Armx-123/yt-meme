@@ -13,6 +13,8 @@ env:
   GMAIL: ${{ secrets.GMAIL}}
   PASS: ${{ secrets.PASS}}
   AC_TOKEN: ${{ secrets.AC_TOKEN}}
+  RYNX: ${{ secrets.RYNX}}
+  
 
 jobs:
   scrape-latest:
