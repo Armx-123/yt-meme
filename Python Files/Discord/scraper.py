@@ -10,7 +10,7 @@ from threading import Lock
 bot = commands.Bot(command_prefix="/", intents=discord.Intents.all())
 
 # Discord authorization token
-header = {'authorization': ''}
+header = {'authorization': 'os.environ['AC_TOKEN']'}
 json_file_lock = Lock()
 file ='video_urls.json'
 @bot.event
@@ -167,4 +167,4 @@ async def scrape_and_get_total():
     print(f"Total memes: {total_count}")
     return total_count, server_counts
 
-bot.run()
+bot.run(os.environ['API'])
