@@ -117,18 +117,18 @@ while l > 0:
 
 i = 0
 
-while length < 600:
-    latest_url = get_latest_message_url()
-    if latest_url is None:
-        break
+# while length < 600:
+#     latest_url = get_latest_message_url()
+#     if latest_url is None:
+#         break
 
-    dur = int(get_video_duration(latest_url))
-    print(dur)
-    if 2 <= dur <= 20:
-        video_url = latest_url
-        output_path = f"Videos/combined_video_{i}.mp4"
-        download_and_combine_audio_video(video_url, output_path)
-        length += dur
+#     dur = int(get_video_duration(latest_url))
+#     print(dur)
+#     if 2 <= dur <= 20:
+#         video_url = latest_url
+#         output_path = f"Videos/combined_video_{i}.mp4"
+#         download_and_combine_audio_video(video_url, output_path)
+#         length += dur
 
-    i += 1
-    delete_latest_message()
+#     i += 1
+#     delete_latest_message()
