@@ -10,7 +10,7 @@ from threading import Lock
 bot = commands.Bot(command_prefix="/", intents=discord.Intents.all())
 
 # Discord authorization token
-header = {'authorization': 'os.environ['AC_TOKEN']'}
+header = {'authorization': os.environ['AC_TOKEN']}
 json_file_lock = Lock()
 file ='video_urls.json'
 @bot.event
