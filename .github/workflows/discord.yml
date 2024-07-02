@@ -27,4 +27,4 @@ jobs:
       - name: Test env vars for python
         run: TEST_SECRET=${{ secrets.API}}
       - name: Run Bot
-        run: python /home/runner/work/yt-meme/discord_main.py
+        run: python discord_main.py
