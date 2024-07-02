@@ -1,102 +1,170 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-import time
-import json
+import discord
+from discord.ext import commands
+import requests
+import re
 import os
-def scrape(link):
-    driver_path = r"D:\Desktop\Data\E-commerce\Youtube\Byte\Meme\byte_Meme\Discord\chromedriver.exe"
-    brave_path = r"C:\Program Files\BraveSoftware\Brave-Browser\Application\brave.exe"
+import json
+from concurrent.futures import ThreadPoolExecutor
+from threading import Lock
 
-    option = webdriver.ChromeOptions()
-    option.binary_location = brave_path
-    option.add_argument("start-maximized")
-    option.add_argument("headless")
+bot = commands.Bot(command_prefix="/", intents=discord.Intents.all())
 
-    # Create new Instance of Chrome
-    driver = webdriver.Chrome(options=option)
+# Discord authorization token
+header = {'authorization': ''}
+json_file_lock = Lock()
+file ='video_urls.json'
+@bot.event
+async def on_ready():
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game("/Neo"))
+    print("Bot is Ready")
 
-    try:
-        # Navigate to the Discord login page
-        driver.get('https://discord.com/login')
+    # Send embed with meme counts
+    total_count, server_counts = await scrape_and_get_total()
+    await send_embed(user_id=831419437617643591, total_count=total_count, server_counts=server_counts)
+    await bot.close()
 
-        # Wait for the page to load and find the login elements
-        WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.NAME, 'email'))
+async def send_embed(user_id, total_count, server_counts):
+    user = await bot.fetch_user(user_id)
+    if user:
+        embed = discord.Embed(
+            title="Meme Count",
+            description=f"Total memes scraped: {total_count}",
+            color=discord.Color.blue()
         )
+        embed.set_footer(text="Memes scraped from various servers.")
 
-        # Find the username and password input fields and enter your credentials
-        username_field = driver.find_element(By.NAME, 'email')
-        password_field = driver.find_element(By.NAME, 'password')
+        for server_name, count in server_counts.items():
+            embed.add_field(name=f"Server: {server_name}", value=f"Memes scraped: {count}", inline=False)
 
-        # Enter your Discord username and password
-        username_field.send_keys(os.environ['GMAIL'])
-        password_field.send_keys(os.environ['PASS'])
-
-        # Submit the login form
-        password_field.send_keys(Keys.RETURN)
-
-        # Wait for login process to complete
-        WebDriverWait(driver, 20).until(
-            EC.url_changes('https://discord.com/login')
-        )
-
-        # Navigate to the desired channel
-        driver.get(link)
-
-        # Wait for the channel page to load
-        time.sleep(5)
-
-        # Scroll to load more messages
-        body = driver.find_element(By.TAG_NAME, 'body')
-        for _ in range(10):  # Adjust the range to load more messages if needed
-            body.send_keys(Keys.PAGE_UP)
-            time.sleep(1)
-
-        # Wait for video elements to be present
-        WebDriverWait(driver, 20).until(
-            EC.presence_of_all_elements_located((By.TAG_NAME, 'video'))
-        )
-
-        # Find all video elements
-        video_elements = driver.find_elements(By.TAG_NAME, 'video')
-
-        # Create a list to store video URLs
-        video_urls = []
-
-        # Extract URLs from video elements
-        for video_element in video_elements:
-            video_url = video_element.get_attribute('src')
-            if video_url:
-                video_urls.append(video_url)
-
-        # Load existing video URLs from the JSON file or create an empty list if the file doesn't exist
         try:
-            with open('video_urls.json', 'r') as file:
-                existing_video_urls = json.load(file)
-        except FileNotFoundError:
-            existing_video_urls = []
+            await user.send(embed=embed)
+            print(f"Embed sent to {user.name}")
+        except discord.Forbidden:
+            print("I don't have permission to send messages to this user.")
+        except discord.HTTPException as e:
+            print(f"Failed to send embed: {e}")
+    else:
+        print("User not found.")
 
-        # Append only the new video URLs that are not already in the existing list
-        new_video_urls = [url for url in video_urls if url not in existing_video_urls]
+def extract_links(message_content):
+    # Regular expression to find URLs in the message content
+    url_pattern = r'https?://\S+'
+    return re.findall(url_pattern, message_content)
 
-        # Append new video URLs to the existing list
-        existing_video_urls.extend(new_video_urls)
+def get_all_messages(channel_id, limit=100):
+    all_messages = []
+    url = f"https://discord.com/api/v9/channels/{channel_id}/messages?limit=100"
 
-        # Write the updated video URLs back to the JSON file
-        with open('video_urls.json', 'w') as file:
-            json.dump(existing_video_urls, file, indent=2)
-        
-        # Debugging: Print the new video URLs to verify
-        print("New video URLs found:", new_video_urls)
+    while len(all_messages) < limit:
+        response = requests.get(url, headers=header, timeout=35)
+        if response.status_code == 200:
+            messages = response.json()
+            if not messages:
+                break
+            all_messages.extend(messages)
+            if len(all_messages) >= limit:
+                break
+            # Set the URL to fetch messages before the last message in the current batch
+            url = f"https://discord.com/api/v9/channels/{channel_id}/messages?limit=100&before={messages[-1]['id']}"
+        else:
+            # Print error message if request fails
+            print(f"Failed to fetch messages for channel {channel_id}. Status code: {response.status_code}")
+            break
 
-    finally:
-        # Close the browser
-        driver.quit()
+    return all_messages[:limit]
 
-# scrape("https://discord.com/channels/922190986413744138/1156671830162145430")
-scrape("https://discord.com/channels/878900741098602536/1205372043772690444")
-scrape("https://discord.com/channels/988639113248899203/988639133947818064") #Kim Wong
-scrape("https://discord.com/channels/1221914909080813709/1221919254295871648") #sack
+def extract_video_attachments(messages):
+    video_urls = []
+    for message in messages:
+        if 'attachments' in message and message['attachments']:
+            for attachment in message['attachments']:
+                if 'content_type' in attachment and attachment['content_type'].startswith('video'):
+                    video_urls.append(attachment['url'])
+    return video_urls
+
+def save_urls_to_json(video_urls, file_name):
+    with json_file_lock:
+        if os.path.exists(file_name):
+            try:
+                with open(file_name, 'r') as f:
+                    existing_urls = set(json.load(f))
+            except (json.JSONDecodeError, FileNotFoundError):
+                existing_urls = set()
+        else:
+            existing_urls = set()
+
+        new_urls = [url for url in video_urls if url not in existing_urls]
+        all_urls = list(existing_urls.union(new_urls))
+
+        with open(file_name, 'w') as f:
+            json.dump(all_urls, f, indent=3)
+
+    return new_urls
+
+def get_channel_info(channel_id):
+    url = f"https://discord.com/api/v9/channels/{channel_id}"
+    response = requests.get(url, headers=header)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Failed to fetch channel info for {channel_id}. Status code: {response.status_code}")
+        return None
+
+def get_guild_name(guild_id):
+    url = f"https://discord.com/api/v9/guilds/{guild_id}"
+    response = requests.get(url, headers=header)
+    if response.status_code == 200:
+        return response.json().get('name')
+    else:
+        print(f"Failed to fetch guild info for {guild_id}. Status code: {response.status_code}")
+        return None
+
+def scrape(channel_id):
+    channel_info = get_channel_info(channel_id)
+    if channel_info:
+        guild_id = channel_info.get('guild_id')
+        guild_name = get_guild_name(guild_id) if guild_id else "Unknown Server"
+    else:
+        guild_name = "Unknown Server"
+
+    all_messages = get_all_messages(channel_id, limit=100)
+
+    if all_messages:
+        video_urls = extract_video_attachments(all_messages)
+        new_urls = save_urls_to_json(video_urls, file)
+        print(f"{len(new_urls)} found from {guild_name}")
+        return len(new_urls), guild_name
+    else:
+        return 0, guild_name
+
+async def scrape_and_get_total():
+    channel_ids = [
+        "1205372043772690444",
+        "988639133947818064",
+        "1221919254295871648",
+        "934062419733536768",
+        "1088712797510185040",
+        "1221919422802038834",
+        "1215421749424947311",
+        "1185354338420400279",
+        "1239483516589445162",
+        "935989994735169546"
+    ]
+
+    total_count = 0
+    server_counts = {}
+
+    with ThreadPoolExecutor() as executor:
+        results = executor.map(scrape, channel_ids)
+
+    for result, server_name in results:
+        total_count += result
+        if server_name in server_counts:
+            server_counts[server_name] += result
+        else:
+            server_counts[server_name] = result
+
+    print(f"Total memes: {total_count}")
+    return total_count, server_counts
+
+bot.run()
