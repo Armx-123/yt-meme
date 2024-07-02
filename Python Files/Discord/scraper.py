@@ -167,4 +167,4 @@ async def scrape_and_get_total():
     print(f"Total memes: {total_count}")
     return total_count, server_counts
 
-bot.run(os.environ['API'])
+bot.run(os.environ['RYNX'])
