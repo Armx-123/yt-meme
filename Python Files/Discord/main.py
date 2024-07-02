@@ -7,7 +7,7 @@ from download import download_video    # Assuming this is your custom module
 from pick import pick                  # Assuming this is your custom module
 import os
 
-TOKEN = os.environ['API']
+TOKEN = os.environ['RYNX']
 CHANNEL_ID = '1240324282094190642'
 file_path = "video_urls.json"
 SEND_message_proxy_url = f"https://discord.com/api/v9/channels/{CHANNEL_ID}/messages"
