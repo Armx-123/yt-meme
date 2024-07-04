@@ -114,7 +114,7 @@ while l > 0:
     index += 1
     l -= 1
     print(f"index: {index} length: {l}")
-    time.sleep(2)
+    time.sleep(20)
 
 i = 0
 
