@@ -6,7 +6,7 @@ from length import get_video_duration  # Assuming this is your custom module
 from download import download_video    # Assuming this is your custom module
 from pick import pick                  # Assuming this is your custom module
 import os
-
+import time
 TOKEN = os.environ['RYNX']
 CHANNEL_ID = '1240324282094190642'
 file_path = "video_urls.json"
@@ -114,6 +114,7 @@ while l > 0:
     index += 1
     l -= 1
     print(f"index: {index} length: {l}")
+    time.sleep(2)
 
 i = 0
 
