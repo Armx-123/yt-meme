@@ -131,6 +131,7 @@ if __name__ == "__main__":
     channel_id = 'UCT0vmR76yrI__1W2W6ELMxA'  # Replace with your actual channel ID
     subscriber_count = int(get_subscriber_count(api_key, channel_id))
 
+
     # Define start and target values based on subscriber count
     if subscriber_count == 0:
         start_value = 0
@@ -184,13 +185,13 @@ if __name__ == "__main__":
     # Define texts, their positions, font paths, and sizes
     texts = ['Hello World!', 'SUBSCRIBE!', f'{formatted_start_value} Subs', f'{formatted_target_value} Subs']  # Replace with your texts
     text_positions = [(50, 50), (900, 500), (850, 850), (1650, 850)]
-    text_font_path = 'LO.ttf'  # Replace with your font path for text
+    text_font_path = 'Data/LO.ttf'  # Replace with your font path for text
     text_font_sizes = [40, 150, 50, 50]  # Font sizes for each text
 
     # Define emojis, their positions, font paths, and sizes
     emojis = ['🥳', '🎊', '🎉', '🤩'] if current_value == target_value else ['', '', '', '']
     emoji_positions = [(1600, 860)]
-    emoji_font_path = 'NotoColorEmoji.ttf'  # Replace with your font path for emojis
+    emoji_font_path = 'Data/NotoColorEmoji.ttf'  # Replace with your font path for emojis
     emoji_font_sizes = [50]  # Font sizes for each emoji
 
     # Combine texts and emojis into one list for drawing
