@@ -147,7 +147,7 @@ def main():
         default_title =f.readline() +" #fyp #funny #memes #shorts"
     default_description = "#memes,#ylyl"
     default_category = "23"
-    default_keywords = "memes,dank memes,smallcat, offensive memes, ylyl,shorts"
+    default_keywords = "memes,memes that if ylyl , ohio memes, you laugh you lose,meme,memes funny, funny, random memes,tik tok memes, memes compilation,memes i found on discord, memes i stole from discord, memes from instagram, memes from my discord, memes from discord, memes from the internet discord, discord basement, memes from internet,memes from reddit,reddit memes,dank memes,smallcat, offensive memes, ylyl,shorts"
     default_privacy_status = "public"  # Assuming "private" is a valid privacy status
 
     # Define the default values directly in the code
