@@ -27,7 +27,7 @@ RETRIABLE_EXCEPTIONS = (httplib2.HttpLib2Error, IOError, httplib2.ServerNotFound
 RETRIABLE_STATUS_CODES = [500, 502, 503, 504]
 
 # CLIENT_SECRETS_FILE, name of a file containing the OAuth 2.0 information for this application.
-CLIENT_SECRETS_FILE = "credentials/Byte meme.json"
+CLIENT_SECRETS_FILE = "Data/client.json"
 SCOPES = ['https://www.googleapis.com/auth/youtube.force-ssl']
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
