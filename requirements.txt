@@ -11,7 +11,7 @@ colorama==0.4.6
 decorator==4.4.2
 discord==2.3.2
 discord.py==2.3.2
-emoji==2.12.1
+emoji==2.10.1
 frozenlist==1.4.1
 google-api-core==2.19.0
 google-api-python-client==2.130.0
