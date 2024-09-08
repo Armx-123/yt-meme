@@ -29,11 +29,9 @@ jobs:
       - name: Test env vars for python
         run: TEST_SECRET=${{ secrets.API}}
       - name: Setup Chrome
-        uses: actions/setup-node@v3
+        uses: browser-actions/setup-chrome@v1
         with:
-          node-version: '16'
-          cache: 'npm'
-      - name: Setup Chrome
-        uses: actions/setup-chrome@v3
+          chrome-version: 120
+          install-dependencies: true
       - name: Run Bot
         run: python banner_main.py
