@@ -144,8 +144,8 @@ def resumable_upload(request):
 def main():
     default_file = "video.mp4"
     with open("Data/title.txt", "r") as f:
-        default_title =f.readline() +" #fyp #funny #memes #shorts"
-    default_description = "#memes,#ylyl,#short"
+        default_title =f.readline() +" #fyp #funny #memes #shorts #trensding"
+    default_description = f" {default_title} \n#memes,#ylyl,#short"
     default_category = "23"
     default_keywords = "dank memes,discord basement,funny,meme,memes compilation,memes from internet,memes from my discord,memes i found on discord,memes i stole from discord,memes that if ylyl,offensive memes,random memes,shorts,smallcat,tik tok memes,ylyl,you laugh you lose,the dank dealer,offensive memes 2021,kny memes,countryball memes,best minecraft memes"
     default_privacy_status = "public"  # Assuming "private" is a valid privacy status
