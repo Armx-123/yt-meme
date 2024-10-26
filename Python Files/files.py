@@ -50,6 +50,6 @@ async def on_ready():
     await download_attachments(channel,"Data")
 #   await download_attachments(channel,"temp")
 
-client.run(os.environ['RYNX'])
+client.run(os.environ['TOKEN'])
 
 
