@@ -144,10 +144,10 @@ def resumable_upload(request):
 def main():
     default_file = "video.mp4"
     with open("Data/title.txt", "r") as f:
-        default_title =f.readline() +" #fyp #funny #memes #shorts #trending"
+        default_title =f.readline() +"#short #fyp #funny #memes #shorts #trending"
     default_description = f" Get ready to laugh with our hilarious dank meme shorts! Packed with the funniest, most relatable, and trendiest meme content, our videos bring you daily laughs with quick, punchy humor that’s perfect for any mood. From viral internet trends to clever twists on classic memes, these shorts will keep you entertained, informed, and up-to-date with what’s trending. Don’t miss out on your daily dose of laughter—subscribe for a regular stream of memes, comedy, and good vibes. Whether you're looking to brighten your day or share a laugh with friends, our dank meme shorts are here to deliver! \n#short,#memes,#ylyl\n\nfunny videos try not to laugh , funny memes try not to laugh , try not to laugh challenge meme, funny video funny video , memes that are actually funny , funny memes compilation , funny animal videos , try not to laugh challenge, funny memes , funny try not to laugh impossible memes , funny funny funny funny funny funny videos"
     default_category = "23"
-    default_keywords = "dank memes,discord basement,funny,meme,memes compilation,memes from internet,memes from my discord,memes i found on discord,memes i stole from discord,memes that if ylyl,offensive memes,random memes,shorts,smallcat,tik tok memes,ylyl,you laugh you lose,the dank dealer,offensive memes 2021,kny memes,countryball memes,best minecraft memes"
+    default_keywords = "shorts,shorts,memes,compilation"
     default_privacy_status = "public"  # Assuming "private" is a valid privacy status
 
     # Define the default values directly in the code
