@@ -2,7 +2,7 @@ import os
 import discord
 import zipfile
 from discord.ext import commands
-
+import subprocess
 # Define constants
 MERGED_ZIP_PATH = "zip.zip"
 TEMP_DIR = "temp"  # Temporary directory for storing ZIP parts
@@ -70,5 +70,5 @@ async def on_ready():
 
 # Run the bot
 bot.run('TOKEN')
-
+subprocess.run(["python", "unzip.py"], check=True)
 # os.environ['TOKEN']
