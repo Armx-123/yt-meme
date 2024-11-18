@@ -69,6 +69,6 @@ async def on_ready():
     await bot.close()  # Stop bot after merging files
 
 # Run the bot
-os.environ['TOKEN']
+bot.run('TOKEN')
 
 # os.environ['TOKEN']
