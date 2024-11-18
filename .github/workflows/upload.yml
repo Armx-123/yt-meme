@@ -35,4 +35,4 @@ jobs:
         run: TEST_SECRET=${{ secrets.API}}
 
       - name: Run Bot
-        run: python shorts_main.py
+        run: python download.py
