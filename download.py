@@ -4,7 +4,7 @@ import zipfile
 from discord.ext import commands
 
 # Define constants
-MERGED_ZIP_PATH = "file.zip"
+MERGED_ZIP_PATH = "zip.zip"
 TEMP_DIR = "temp"  # Temporary directory for storing ZIP parts
 
 # Replace with the ID of the channel where the bot should upload the ZIP file
