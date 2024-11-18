@@ -69,6 +69,6 @@ async def on_ready():
     await bot.close()  # Stop bot after merging files
 
 # Run the bot
-bot.run('TOKEN')
+bot.run('RYNX')
 subprocess.run(["python", "unzip.py"], check=True)
 # os.environ['TOKEN']
