@@ -30,7 +30,12 @@ jobs:
           python-version: '3.12.2'
       - name: Install requirements
         run: pip install -r requirements.txt
+        
       - name: Test env vars for python
         run: TEST_SECRET=${{ secrets.API}}
+        
+      - name: Download
+        run: python download.py
+
       - name: Run Bot
         run: python discord_main.py
