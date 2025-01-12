@@ -29,9 +29,7 @@ jobs:
       - name: Test env vars for python
         run: TEST_SECRET=${{ secrets.API}}
       - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: 120
-          install-dependencies: true
+        uses: browser-actions/setup-chrome@v1.7.2
+            
       - name: Run Bot
         run: python banner_main.py
