@@ -1,4 +1,4 @@
-name: Discord
+name: Sort
 
 on:
   schedule:
