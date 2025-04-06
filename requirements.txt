@@ -1,6 +1,5 @@
 annotated-types==0.7.0
 attrs==25.3.0
-audioop-lts==0.2.1
 audioread==3.0.1
 Brotli==1.1.0
 build==1.2.2.post1
