@@ -6,7 +6,7 @@ ACCESS_TOKEN = os.environ['GIT']
 # Repository details
 REPO_NAME = "Armx-123/yt-meme"  # Format: username/repo
 FILE_PATH = "file.txt"  # Path in the repo
-LOCAL_FILE = "title.txt"  # Local file to upload
+LOCAL_FILE = "file.txt"  # Local file to upload
 COMMIT_MESSAGE = "Add a new text file"
 
 # Authenticate to GitHub
