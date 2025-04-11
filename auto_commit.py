@@ -4,7 +4,7 @@ import os
 ACCESS_TOKEN = os.environ['GIT']
 
 # Repository details
-REPO_NAME = "Armx-123/Auric"  # Format: username/repo
+REPO_NAME = "Armx-123/yt-meme"  # Format: username/repo
 FILE_PATH = "file.txt"  # Path in the repo
 LOCAL_FILE = "title.txt"  # Local file to upload
 COMMIT_MESSAGE = "Add a new text file"
