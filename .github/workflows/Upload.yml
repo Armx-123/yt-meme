@@ -2,7 +2,7 @@ name: Upload
 
 on:
   schedule:
-    - cron: "0 3 * * *"  # Runs every day at midnight (UTC)
+    - cron: "30 21 * * *"  # Runs every day at midnight (UTC)
   workflow_dispatch:     # Allows manual triggering
 
 env:
