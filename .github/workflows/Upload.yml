@@ -20,8 +20,28 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Setup FFmpeg
-        uses: federicocarboni/setup-ffmpeg@v3.1
+      - name: Setup FFmpeg with Retry
+        run: |
+          RETRIES=5
+          COUNT=0
+          until [ $COUNT -ge $RETRIES ]
+          do
+            echo "Attempt $(($COUNT+1)) to install FFmpeg..."
+            if curl -sL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar xJ && sudo mv ffmpeg-*-amd64-static/ffmpeg /usr/local/bin/; then
+              echo "FFmpeg installed successfully."
+              break
+            else
+              echo "FFmpeg install failed. Retrying in 5 seconds..."
+              COUNT=$(($COUNT+1))
+              sleep 5
+            fi
+          done
+      
+          if [ $COUNT -eq $RETRIES ]; then
+            echo "FFmpeg installation failed after $RETRIES attempts."
+            exit 1
+          fi
+
 
       - name: Set up Python
         uses: actions/setup-python@v3
