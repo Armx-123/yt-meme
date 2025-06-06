@@ -22,29 +22,34 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+        
       - name: Set up Python
         uses: actions/setup-python@v3
-      - name: Setup FFmpeg with Retry
+        
+      - name: Setup FFmpeg with Retry (Safe)
         run: |
           RETRIES=5
           COUNT=0
-          until [ $COUNT -ge $RETRIES ]
-          do
+          SUCCESS=0
+          until [ $COUNT -ge $RETRIES ]; do
             echo "Attempt $(($COUNT+1)) to install FFmpeg..."
-            if curl -sL https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz | tar xJ && sudo mv ffmpeg-*-amd64-static/ffmpeg /usr/local/bin/; then
-              echo "FFmpeg installed successfully."
-              break
+            wget -q -O ffmpeg.tar.xz https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz
+            if file ffmpeg.tar.xz | grep -q "XZ compressed data"; then
+              tar -xf ffmpeg.tar.xz
+              sudo mv ffmpeg-*-amd64-static/ffmpeg /usr/local/bin/
+              ffmpeg -version && SUCCESS=1 && echo "FFmpeg installed successfully." && break
             else
-              echo "FFmpeg install failed. Retrying in 5 seconds..."
-              COUNT=$(($COUNT+1))
-              sleep 5
+              echo "Download failed or file is invalid. Retrying in 5 seconds..."
             fi
+            COUNT=$(($COUNT+1))
+            sleep 5
           done
       
-          if [ $COUNT -eq $RETRIES ]; then
+          if [ $SUCCESS -ne 1 ]; then
             echo "FFmpeg installation failed after $RETRIES attempts."
             exit 1
           fi
+
 
       - name: Set up Python
         uses: actions/setup-python@v3
