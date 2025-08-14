@@ -1,0 +1,53 @@
+name: Upload
+
+on:
+  schedule:
+    - cron: "30 21 * * *"  # Runs every day at 21:30 UTC
+  workflow_dispatch:     # Allows manual triggering
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true  # Required for FFmpeg installation
+  API: ${{ secrets.API }}
+  TOKEN: ${{ secrets.RYNX}}
+
+jobs:
+  upload-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Setup FFmpeg with Retry
+        run: |
+          RETRIES=5
+          COUNT=0
+          SUCCESS=0
+          until [ $COUNT -ge $RETRIES ]; do
+            echo "Attempt $(($COUNT+1)) to install FFmpeg..."
+            sudo apt-get update && sudo apt-get install -y ffmpeg && ffmpeg -version && SUCCESS=1 && break
+            COUNT=$(($COUNT+1))
+            echo "FFmpeg install failed. Retrying in 5 seconds..."
+            sleep 5
+          done
+          if [ $SUCCESS -ne 1 ]; then
+            echo "FFmpeg installation failed after $RETRIES attempts."
+            exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.12.2'
+
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - name: Test env vars for python
+        run: echo "TEST_SECRET=${{ secrets.API }}"
+
+      - name: Download
+        run: python download.py
+
+      - name: Process
+        run: python shorts_main.py

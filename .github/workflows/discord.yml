@@ -1,0 +1,38 @@
+
+name: Discord
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+
+env:
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true  # Required for FFmpeg installation
+  API: ${{ secrets.API}}
+  AC_TOKEN: ${{ secrets.AC_TOKEN}}
+  RYNX: ${{ secrets.RYNX}}
+  
+
+jobs:
+  scrape-latest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v3
+      
+        with:
+          python-version: '3.12.2'
+      - name: Install requirements
+        run: pip install -r requirements.txt
+        
+      - name: Test env vars for python
+        run: TEST_SECRET=${{ secrets.API}}
+        
+      - name: Download
+        run: python download.py
+
+      - name: Run Bot
+        run: python discord_main.py
