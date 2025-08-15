@@ -8,7 +8,7 @@ on:
 env:
   ACTIONS_ALLOW_UNSECURE_COMMANDS: true  # Required for FFmpeg installation
   API: ${{ secrets.API }}
-  TOKEN: ${{ secrets.RYNX}}
+  RYNX: ${{ secrets.RYNX}}
 
 jobs:
   upload-job:
